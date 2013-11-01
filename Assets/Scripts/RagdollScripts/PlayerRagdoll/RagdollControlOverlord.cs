@@ -6,7 +6,7 @@ using System.Collections.Generic;
 public static class Extensions {
 	
 	// adds clockwise torque
-	public static void AddTorqueAtPosition(this Rigidbody r, Vector3 torque, float factor, float factor2) {
+	public static void AddTorqueAtPosition(this Rigidbody r, Vector3 torque, Vector3 pos, float factor, float factor2) {
 		
 		// example:
 		// if torque is forward, and pos is left, then we need to add 2 forces:
@@ -21,8 +21,8 @@ public static class Extensions {
 		Vector3 temp = r.centerOfMass;
 		temp = r.transform.TransformDirection(r.centerOfMass);
 		
-		r.AddForceAtPosition(Vector3.Cross(torque, temp).normalized * torque.magnitude, r.transform.position - temp * factor2);
-		r.AddForceAtPosition(-Vector3.Cross(torque, temp).normalized * torque.magnitude, r.transform.position + temp * factor);
+		r.AddForceAtPosition(Vector3.Cross(torque, temp).normalized * torque.magnitude, r.transform.position - temp * factor2 + pos);
+		r.AddForceAtPosition(-Vector3.Cross(torque, temp).normalized * torque.magnitude, r.transform.position + temp * factor + pos);
 		
 	}
 	
@@ -59,7 +59,9 @@ public class RagdollControlOverlord : MonoBehaviour {
 		case "LeftLeg":
 			
 			//LeftUpperLeg.rigidbody.AddTorque(LeftUpperLeg.GetComponent<CharacterJoint>().swingAxis * -amount);
-			LeftLowerLeg.rigidbody.AddTorqueAtPosition(LeftLowerLeg.transform.forward * amount, factor, factor2);
+			LeftLowerLeg.rigidbody.AddTorqueAtPosition(LeftLowerLeg.transform.forward * amount,
+				LeftLowerLeg.transform.position + LeftLowerLeg.transform.right * 0.5f,
+				factor, factor2);
 			break;
 			
 		}
