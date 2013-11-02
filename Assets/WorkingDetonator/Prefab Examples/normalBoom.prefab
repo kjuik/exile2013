@@ -10,6 +10,7 @@ GameObject:
   - 4: {fileID: 400000}
   - 114: {fileID: 11400000}
   - 114: {fileID: 11400002}
+  - 114: {fileID: 11400004}
   m_Layer: 0
   m_Name: normalBoom
   m_TagString: Untagged
@@ -68,7 +69,7 @@ MonoBehaviour:
   autoCreateSmoke: 1
   autoCreateGlow: 1
   autoCreateLight: 1
-  autoCreateForce: 1
+  autoCreateForce: 0
   autoCreateHeatwave: 0
 --- !u!1002 &11400001
 EditorExtensionImpl:
@@ -114,6 +115,41 @@ MonoBehaviour:
   minVolume: .400000006
   maxVolume: 1
   rolloffFactor: .5
+--- !u!114 &11400004
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 100000}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a99a52afbdc68cd4fbc1c477cf05bbba, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  on: 1
+  detonatorControlled: 1
+  startSize: 1
+  size: 1
+  explodeDelayMin: 0
+  explodeDelayMax: 0
+  startDuration: 2
+  duration: 2
+  timeScale: 1
+  startDetail: 1
+  detail: 1
+  startColor: {r: 1, g: 1, b: 1, a: 1}
+  color: {r: 1, g: 1, b: 1, a: 1}
+  startLocalPosition: {x: 0, y: 0, z: 0}
+  localPosition: {x: 0, y: 0, z: 0}
+  startForce: {x: 0, y: 0, z: 0}
+  force: {x: 0, y: 0, z: 0}
+  startVelocity: {x: 0, y: 0, z: 0}
+  velocity: {x: 0, y: 0, z: 0}
+  detailThreshold: 0
+  radius: 50
+  power: 400
+  fireObject: {fileID: 0}
+  fireObjectLife: 0
 --- !u!1001 &100100000
 Prefab:
   m_ObjectHideFlags: 1

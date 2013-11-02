@@ -48,11 +48,13 @@ public class DogLeg : MonoBehaviour {
 	}
 	
 	public static void Contract(Transform[] muscle, float amount) {
-		Rigidbody r;
-		r = muscle[0].parent.rigidbody;
-		r.AddForceAtPosition((muscle[1].position-muscle[0].position).normalized * amount * r.mass, muscle[0].position, ForceMode.Force);
-		r = muscle[1].parent.rigidbody;
-		r.AddForceAtPosition((muscle[0].position-muscle[1].position).normalized * amount * r.mass, muscle[1].position, ForceMode.Force);
+		Rigidbody r1;
+		Rigidbody r2;
+		r1 = muscle[0].parent.rigidbody;
+		r2 = muscle[1].parent.rigidbody;
+		float mass = (r1.mass + r2.mass)/2;
+		r1.AddForceAtPosition((muscle[1].position-muscle[0].position).normalized * amount * mass, muscle[0].position, ForceMode.Force);
+		r2.AddForceAtPosition((muscle[0].position-muscle[1].position).normalized * amount * mass, muscle[1].position, ForceMode.Force);
 	
 	}
 	
@@ -63,24 +65,35 @@ public class DogLeg : MonoBehaviour {
 		
 	}
 	
+	// use this for triceps, no more bullshit
+	public float GetTricepsLength() {
+		if (minTricepsLength > (triceps[0].position - triceps[1].position).magnitude) {
+			minTricepsLength = (triceps[0].position - triceps[1].position).magnitude;
+		}
+		if (maxTricepsLength < (triceps[0].position - triceps[1].position).magnitude) {
+			maxTricepsLength = (triceps[0].position - triceps[1].position).magnitude;
+		}
+		return ((triceps[0].position - triceps[1].position).magnitude - minTricepsLength)/(maxTricepsLength-minTricepsLength);
+	}
 	
+	public float GetBicepsLength() {
+		if (minBicepsLength > (biceps[0].position - biceps[1].position).magnitude) {
+			minBicepsLength = (biceps[0].position - biceps[1].position).magnitude;
+		}
+		if (maxBicepsLength < (biceps[0].position - biceps[1].position).magnitude) {
+			maxBicepsLength = (biceps[0].position - biceps[1].position).magnitude;
+		}
+		return ((biceps[0].position - biceps[1].position).magnitude - minBicepsLength)/(maxBicepsLength-minBicepsLength);
+	}
+	
+	// old function
 	public float GetMuscleLength(Transform[] muscle) {
 		if (muscle == triceps) {
-			if (minTricepsLength > (muscle[0].position - muscle[1].position).magnitude) {
-				minTricepsLength = (muscle[0].position - muscle[1].position).magnitude;
-			}
-			if (maxTricepsLength < (muscle[0].position - muscle[1].position).magnitude) {
-				maxTricepsLength = (muscle[0].position - muscle[1].position).magnitude;
-			}
-			return ((muscle[0].position - muscle[1].position).magnitude - minTricepsLength)/(maxTricepsLength-minTricepsLength);
+			return GetTricepsLength();
+			
 		} else if (muscle == biceps) {
-			if (minBicepsLength > (muscle[0].position - muscle[1].position).magnitude) {
-				minBicepsLength = (muscle[0].position - muscle[1].position).magnitude;
-			}
-			if (maxBicepsLength < (muscle[0].position - muscle[1].position).magnitude) {
-				maxBicepsLength = (muscle[0].position - muscle[1].position).magnitude;
-			}
-			return ((muscle[0].position - muscle[1].position).magnitude - minBicepsLength)/(maxBicepsLength-minBicepsLength);
+			return GetBicepsLength();
+			
 		} else if (muscle == chest) {
 			if (minChestLength > (muscle[0].position - muscle[1].position).magnitude) {
 				minChestLength = (muscle[0].position - muscle[1].position).magnitude;
