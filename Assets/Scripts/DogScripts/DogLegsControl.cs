@@ -228,16 +228,18 @@ public class DogLegsControl : MonoBehaviour {
 		
 		// and that's why we put the code between the tricepses.
 		
+		
 		// ============================ jump charge elimination
-		// if jumpcharge is positive, we only use it to jump backwards
+		// if jumpcharge is positive, we only use it to get up on the back legs
 		// if it is negative, we only use it to jump forward.
 		if (jumpCharge > 0) {
 			if (LY < 0 && RY < 0) {
 				// violent jump forward
+				
 			}
 		} else {
 			if (LY > 0 && RY > 0) {
-				
+				// violent jump backward
 			}
 		}
 				
