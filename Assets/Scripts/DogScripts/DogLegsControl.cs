@@ -6,6 +6,7 @@ using System.Linq;
 public class DogLegsControl : MonoBehaviour {
 	
 	public DogLeg[] legs;
+	AudioClip[] steps;
 	
 	public float idleForce = 0.2f;
 	private float _idleForce = 0.2f;
@@ -13,11 +14,18 @@ public class DogLegsControl : MonoBehaviour {
 	public float bicepsFullContractForce = 15;
 	public float tricepsFullContractForce = 15;
 	public float chestFullContractForce = 15;
-	public float backLegBonus = 10;
-	public float frontLegBonus = 10;
+	 float backLegBonus = 15;
+	 float frontLegBonus = 15;
 	public float maxChargeBonus = 10;
+	public enum ChargeDirections {
+		Forward,
+		Back,
+		Left,
+		Right
+	};
+	ChargeDirections chargeDirection;
 	float jumpCharge = 0;
-	public float chargeSpeed;
+	public float chargeSpeed = 0.5f;
 	
 	float idleTimer = 0;
 	public float timeUntilIdle = 1;
@@ -31,7 +39,16 @@ public class DogLegsControl : MonoBehaviour {
 	}
 	
 	void Start() {
+		steps = ((References)GameObject.FindObjectOfType(typeof(References))).steps;
+		// add sound scripts on each little leg
 		
+		for (int i = 0; i < 4; i++) {
+			FootSounds fs = legs[i].gameObject.AddComponent<FootSounds>();
+			fs.steps = steps;
+			fs = legs[i].lowerLeg.gameObject.AddComponent<FootSounds>();
+			fs.steps = steps;
+			
+		}
 	}
 	
 	void Discharge() {
@@ -74,17 +91,34 @@ public class DogLegsControl : MonoBehaviour {
 		
 		// =====================================input!!!
 		
-		// for charging jumps and rolls
+		// ============for charging jumps and rolls
 		
 		// if both joysticks are tilted the same way
-		if (LX * RX > 0) {
+		if (LX * RX > 0 && (Mathf.Abs(LX) > 0.5f || Mathf.Abs(RX) > 0.5f)) {
+			jumpCharge += -chargeSpeed * (LX + RX) * Time.deltaTime;
+			if (LX < 0)
+				chargeDirection = ChargeDirections.Right;
+			else 
+				chargeDirection = ChargeDirections.Left;
+			print (chargeDirection.ToString());
+			
+		} else 
+		if (LY * RY > 0 && (Mathf.Abs(LY) > 0.5f || Mathf.Abs(RY) > 0.5f)) {
+			jumpCharge += chargeSpeed * (LY + RY);
+			if (LY < 0)
+				chargeDirection = ChargeDirections.Back;
+			else 
+				chargeDirection = ChargeDirections.Forward;
+			print (chargeDirection.ToString());
+			
+		} else {
+			Discharge();
 			
 		}
 		
-		if (LY * RY > 0) {
-			jumpCharge += chargeSpeed * (LY + RY);
-			
-		}
+		// clamp charge so we don't get astronaut dog
+		jumpCharge = Mathf.Clamp(jumpCharge, -maxChargeBonus, maxChargeBonus);
+		
 		// which means LX * RX > 0
 		// or LY * RY > 0
 		// then increase the jumpCharge until the max amount.
@@ -123,7 +157,6 @@ public class DogLegsControl : MonoBehaviour {
 			ContractMuscle (legs[1], Muscles.Triceps, -LX);
 			// contract triceps = contract biceps
 			// at the end of the contraction, we actually want to extend, just before we switch legs.
-			print(legs[1].GetTricepsLength());
 			if (legs[1].GetTricepsLength() < 0.35f) {
 				ExtendMuscle (legs[1], Muscles.Biceps, -LX);
 			} else {
@@ -232,14 +265,46 @@ public class DogLegsControl : MonoBehaviour {
 		// ============================ jump charge elimination
 		// if jumpcharge is positive, we only use it to get up on the back legs
 		// if it is negative, we only use it to jump forward.
-		if (jumpCharge > 0) {
-			if (LY < 0 && RY < 0) {
-				// violent jump forward
+		
+		// if we move in the opposite direction, we discharge the jumpcharge in the correct direction.
+		// otherwise we let it slowly discharge.
+		
+		// ======== check if we move in opposite direction
+			// if both joysticks are tilted the same way
+			if (LX * RX > 0 && (Mathf.Abs(LX) > 0.5f || Mathf.Abs(RX) > 0.5f)) {
+				// we know that we are moving seriously
+				
+				if (chargeDirection == ChargeDirections.Left) {
+					// turn = force to the chest (maybe)
+					
+				} else if (chargeDirection == ChargeDirections.Right) {
+					// turn = force to the chest (maybe)
+					
+				}
+				
+				
+			} else 
+			if (LY * RY > 0 && (Mathf.Abs(LY) > 0.5f || Mathf.Abs(RY) > 0.5f)) {
+				jumpCharge += chargeSpeed * (LY + RY);
+				if (LY < 0)
+					chargeDirection = ChargeDirections.Back;
+				else 
+					chargeDirection = ChargeDirections.Forward;
+				
+			} else {
+				Discharge();
 				
 			}
-		} else {
+		
+		if (jumpCharge > 0) {
+			if (LY < 0 && RY < 0) {
+				// up on 2 back legs
+				print ("we're on the back legs");
+			}
+		} else if (jumpCharge < 0) {
 			if (LY > 0 && RY > 0) {
 				// violent jump backward
+				print ("we're violently jumping forward now");
 			}
 		}
 				
@@ -251,6 +316,7 @@ public class DogLegsControl : MonoBehaviour {
 		}
 		
 		// calculate the difference of balance from initial rotation
+		print (legs[i].lowerLeg.name + " exists yaaay");
 		float currentL = legs[i].lowerLeg.rotation.eulerAngles.x;
 		if (currentL > 180)
 			currentL = currentL - 360;

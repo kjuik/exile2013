@@ -452,6 +452,7 @@ public class Detonator : MonoBehaviour {
             Texture2D tex = Resources.Load("Detonator/Textures/Heatwave") as Texture2D;
             defaultHeatwaveMaterial.SetTexture("_BumpMap", tex);
             return defaultHeatwaveMaterial;
+		
         }
         else
         {

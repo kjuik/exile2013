@@ -30,7 +30,8 @@ public class DogLeg : MonoBehaviour {
 	
 	
 	void Start() {
-		lowerLeg = GameObject.Find("LegLower-" + transform.name.Substring(9, 2)).transform;
+		lowerLeg = transform.parent.FindChild("LegLower-" + transform.name.Substring(9, 2)).transform;
+		//lowerLeg = GameObject.Find("LegLower-" + transform.name.Substring(9, 2)).transform;
 		
 		targetRotation = Quaternion.identity;
 		lowerLegTargetRotation = Quaternion.identity;
