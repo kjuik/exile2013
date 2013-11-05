@@ -41,7 +41,6 @@ public class DogLegsControl : MonoBehaviour {
 	void Start() {
 		steps = ((References)GameObject.FindObjectOfType(typeof(References))).steps;
 		// add sound scripts on each little leg
-		
 		for (int i = 0; i < 4; i++) {
 			FootSounds fs = legs[i].gameObject.AddComponent<FootSounds>();
 			fs.steps = steps;
@@ -49,6 +48,13 @@ public class DogLegsControl : MonoBehaviour {
 			fs.steps = steps;
 			
 		}
+		
+		// make rubbery legs so we don't slide all the time
+//		PhysicMaterial pMat = ((References)GameObject.FindObjectOfType(typeof(References))).footMaterial;
+//		for (int i = 0; i < 4; i++) {
+//			legs[i].lowerLeg.collider.material = pMat;
+//		}
+		
 	}
 	
 	void Discharge() {
@@ -63,6 +69,10 @@ public class DogLegsControl : MonoBehaviour {
 		
 		_idleForce = idleForce;
 		
+		// a two player version cannot be implemented at this point
+		//		because there are places in the scripts where the compiler looks for 
+		//		objects named "Body", assuming there is only one such object.
+		// 		To implement 2 players, we need to make sure we are not looking for objects named "Body" because we'll find 2.
 		float LX = Input.GetAxis("Player 0 left X");
 		float LY = Input.GetAxis("Player 0 left Y");
 		float RX = Input.GetAxis("Player 0 right X");
@@ -299,12 +309,12 @@ public class DogLegsControl : MonoBehaviour {
 		if (jumpCharge > 0) {
 			if (LY < 0 && RY < 0) {
 				// up on 2 back legs
-				print ("we're on the back legs");
+				//print ("we're on the back legs");
 			}
 		} else if (jumpCharge < 0) {
 			if (LY > 0 && RY > 0) {
 				// violent jump backward
-				print ("we're violently jumping forward now");
+				//print ("we're violently jumping forward now");
 			}
 		}
 				
@@ -316,7 +326,6 @@ public class DogLegsControl : MonoBehaviour {
 		}
 		
 		// calculate the difference of balance from initial rotation
-		print (legs[i].lowerLeg.name + " exists yaaay");
 		float currentL = legs[i].lowerLeg.rotation.eulerAngles.x;
 		if (currentL > 180)
 			currentL = currentL - 360;

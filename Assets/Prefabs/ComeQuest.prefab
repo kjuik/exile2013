@@ -618,7 +618,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 100000}
   m_LocalRotation: {x: 0, y: .382683486, z: 0, w: .923879564}
-  m_LocalPosition: {x: .0504786447, y: .0513062477, z: -9.03499699}
+  m_LocalPosition: {x: .850616157, y: .0513062477, z: -12.613142}
   m_LocalScale: {x: 1, y: .00999999978, z: 1}
   m_Children: []
   m_Father: {fileID: 400002}
@@ -643,7 +643,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 100072}
   m_LocalRotation: {x: 0, y: 2.10821966e-07, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: .636822939, y: 0, z: 5.22107315}
   m_LocalScale: {x: .718211889, y: .718211889, z: .718211889}
   m_Children:
   - {fileID: 400070}
@@ -1608,8 +1608,6 @@ MonoBehaviour:
   bicepsFullContractForce: 30
   tricepsFullContractForce: 40
   chestFullContractForce: 30
-  backLegBonus: 15
-  frontLegBonus: 10
   maxChargeBonus: 50
   chargeSpeed: .5
   timeUntilIdle: 1
